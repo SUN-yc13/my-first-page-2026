@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>我的新网页</title>
+  <style>
+    body {
+        font-family: "仿宋", sans-serif;
+        text-align: center;
+        background-color: lightblue;
+        color: black;
+        padding-top: 100px;
+    }
+    h1 {
+        color: green;
+    }
+    h2 {
+        color: black;
+    }
+  </style>
+</head>
+<body>
+  <h1>Hi,你好呀</h1>
+  <h2>现在是：<span id="now-time"></span></h2>
+  <p>5月22日，我的第一个网页文件成功运行了</p>
+  <p>5月23日，我对ta（当前网页）进行了页面、文字的优化，并使用GITHUB进行网址上线，也使代码更标准</p>
+
+  <script>
+    // 定义更新时间的函数
+    function showTime() {
+      let now = new Date();
+      let year = now.getFullYear();
+      let month = now.getMonth() + 1;
+      let day = now.getDate();
+      let hour = now.getHours();
+      let minute = now.getMinutes();
+      let second = now.getSeconds();
+
+      // 补零，比如 9点5分变成 09:05
+      month = month < 10 ? '0' + month : month;
+      day = day < 10 ? '0' + day : day;
+      hour = hour < 10 ? '0' + hour : hour;
+      minute = minute < 10 ? '0' + minute : minute;
+      second = second < 10 ? '0' + second : second;
+
+      let timeStr = `${year}年${month}月${day}日 ${hour}:${minute}:${second}`;
+      document.getElementById('now-time').innerText = timeStr;
+    }
+
+    // 页面加载时立刻显示一次时间
+    showTime();
+    // 每秒更新一次时间
+    setInterval(showTime, 1000);
+  </script>
+</body>
+</html>
