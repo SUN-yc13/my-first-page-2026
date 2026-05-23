@@ -1,4 +1,4 @@
-//V 1.3
+//版本V 1.3
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -30,7 +30,9 @@
   <!-- 超链接：访问我的主页 -->
   <a href="https://github.com/sun-yc13">访问我的主页</a>
 
- // 定义更新时间的函数
+  <!-- JS 必须放在 script 标签里 -->
+  <script>
+    // 定义更新时间的函数
     function showTime() {
       let now = new Date();
       let year = now.getFullYear();
@@ -55,6 +57,7 @@
     showTime();
     // 每秒更新一次时间
     setInterval(showTime, 1000);
+  </script>
 
 </body>
 </html>
