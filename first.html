@@ -27,8 +27,7 @@
   <p>5月22日，我的第一个网页文件成功运行了</p>
   <p>5月23日，我对ta（当前网页）进行了页面、文字的优化，并使用GITHUB进行网址上线，也使代码更标准</p>
 
-  <!-- 超链接：访问我的主页 -->
-  <a href="https://github.com/sun-yc13">访问我的主页</a>
+  
 
   <!-- JS 必须放在 script 标签里 -->
   <script>
@@ -42,7 +41,7 @@
       let minute = now.getMinutes();
       let second = now.getSeconds();
 
-      // 补零，比如 9点5分变成 09:05
+    
       month = month < 10 ? '0' + month : month;
       day = day < 10 ? '0' + day : day;
       hour = hour < 10 ? '0' + hour : hour;
@@ -53,11 +52,13 @@
       document.getElementById('now-time').innerText = timeStr;
     }
 
-    // 页面加载时立刻显示一次时间
-    showTime();
+    // 页面加载时立刻显示一次时
     // 每秒更新一次时间
     setInterval(showTime, 1000);
   </script>
-
+  <!-- 超链接：访问我的主页 -->
+  <a href="https://github.com/sun-yc13">访问我的主页</a>
+间
+    showTime();
 </body>
 </html>
