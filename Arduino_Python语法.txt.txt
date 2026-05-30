@@ -1,0 +1,117 @@
+===============================
+Python 控制 Arduino Uno 完整语法手册
+===============================
+
+============= 1. 必备导入 =============
+import pyfirmata
+import time
+from pyfirmata import util
+
+============= 2. 连接开发板 =============
+# Windows
+board = pyfirmata.Arduino("COM3")
+# Mac
+board = pyfirmata.Arduino("/dev/tty.usbmodemxxx")
+# Linux
+board = pyfirmata.Arduino("/dev/ttyUSB0")
+
+============= 3. 必须启动迭代器 =============
+it = util.Iterator(board)
+it.start()
+
+============= 4. 引脚定义语法 =============
+# 格式：类型:引脚号:模式
+# d=数字  a=模拟  i=输入  o=输出  p=PWM  s=舵机
+
+# 数字输出（LED）
+led = board.get_pin('d:13:o')
+
+# 数字输入（按键）
+key = board.get_pin('d:2:i')
+
+# PWM 输出（调光/调速）
+pwm = board.get_pin('d:9:p')
+
+# 模拟输入（传感器 A0-A5）
+sensor = board.get_pin('a:0:i')
+
+# 舵机
+servo = board.get_pin('d:9:s')
+
+============= 5. 数字输出语法 =============
+led.write(1)   # 高电平 亮
+led.write(0)   # 低电平 灭
+
+============= 6. PWM 输出语法 =============
+pwm.write(0)    # 最暗
+pwm.write(128)  # 半亮
+pwm.write(255)  # 最亮
+
+============= 7. 读取数据语法 =============
+# 数字输入
+state = key.read()
+
+# 模拟输入
+val = sensor.read()  # 返回 0.0 ~ 1.0
+
+# 真实电压
+voltage = val * 5
+
+============= 8. 舵机语法 =============
+servo.write(0)    # 0度
+servo.write(90)   # 90度
+servo.write(180)  # 180度
+
+============= 9. 延时语法 =============
+time.sleep(1)    # 1秒
+time.sleep(0.5)  # 0.5秒
+time.sleep(0.01) # 10毫秒
+
+============= 10. 关闭连接 =============
+board.exit()
+
+============= 11. 常用完整模板 =============
+# LED 闪烁模板
+import pyfirmata
+import time
+board = pyfirmata.Arduino("COM3")
+led = board.get_pin('d:13:o')
+while True:
+    led.write(1)
+    time.sleep(1)
+    led.write(0)
+    time.sleep(1)
+
+# 读取传感器模板
+import pyfirmata
+import time
+from pyfirmata import util
+board = pyfirmata.Arduino("COM3")
+it = util.Iterator(board)
+it.start()
+sensor = board.get_pin('a:0:i')
+while True:
+    val = sensor.read()
+    if val != None:
+        print(val)
+    time.sleep(0.1)
+
+============= 12. 错误处理语法 =============
+try:
+    board = pyfirmata.Arduino("COM3")
+except:
+    print("连接失败")
+
+============= 13. 串口通信语法（pyserial）=============
+import serial
+ser = serial.Serial("COM3",9600)
+ser.write(b"hello")
+data = ser.readline().decode()
+ser.close()
+
+============= 14. 必须记住的规则 =============
+1. D0 D1 不能用
+2. 所有模块必须共 GND
+3. 读取传感器必须开迭代器
+4. LED 必须串 220Ω 电阻
+5. 电机不能直接接引脚
