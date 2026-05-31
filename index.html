@@ -1,0 +1,449 @@
+<!-- AI生成  -->
+<!-- 网页名字：太阳-YC13的炫酷作品库 -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 浏览器标签名称（路由器/浏览器顶部展示名称） -->
+    <title>太阳-YC13的炫酷作品库</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Microsoft YaHei", sans-serif;
+        }
+
+        :root {
+            --bg: #000;
+            --glass: rgba(255,255,255,0.08);
+            --glass-border: rgba(255,255,255,0.15);
+            --accent: #6366f1;
+            --accent2: #a855f7;
+            --text: #f5f5f7;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* 顶部滚动进度条 */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--accent2));
+            width: 0%;
+            z-index: 9999;
+        }
+
+        /* 粒子星空背景 */
+        #particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        /* 鼠标跟随光晕 */
+        .cursor-glow {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(99,102,241,0.15), transparent 70%);
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* 页面加载动画 */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 99999;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+        .loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        .loader-circle {
+            width: 60px;
+            height: 60px;
+            border: 3px solid rgba(255,255,255,0.1);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* 头部英雄区 苹果风格大标题 */
+        header {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .hero-title {
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 700;
+            background: linear-gradient(90deg, #fff, #a5b4fc, #f0abfc);
+            -webkit-background-clip: text;
+            color: transparent;
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeUp 1s ease forwards;
+        }
+
+        .hero-sub {
+            font-size: clamp(1rem, 2.5vw, 1.4rem);
+            color: #a1a1aa;
+            max-width: 600px;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeUp 1s ease 0.2s forwards;
+        }
+
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 实时时钟 */
+        .clock {
+            margin-top: 2rem;
+            font-size: 1.2rem;
+            color: #94a3b8;
+            letter-spacing: 2px;
+        }
+
+        /* 背景音乐按钮 */
+        .music-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            transition: transform 0.3s ease;
+            font-size: 20px;
+        }
+        .music-btn:hover { transform: scale(1.1); }
+
+        /* 主容器 */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 6rem 2rem;
+        }
+
+        .section-title {
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            margin-bottom: 3rem;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s ease;
+        }
+        .section-title.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* 卡片网格布局 */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        /* 玻璃态卡片 + 滚动渐入动画 */
+        .card {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+            backdrop-filter: blur(16px);
+            opacity: 0;
+            transform: translateY(50px) scale(0.95);
+            transition: all 0.6s ease;
+        }
+        .card.visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+        .card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 60px rgba(99,102,241,0.25);
+            border-color: rgba(168,85,247,0.5);
+        }
+
+        .card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+        }
+        .card p {
+            color: #a1a1aa;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        /* 渐变按钮 */
+        .btn {
+            display: inline-block;
+            padding: 12px 28px;
+            border-radius: 50px;
+            background: linear-gradient(90deg, var(--accent), var(--accent2));
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 10px 30px rgba(99,102,241,0.3);
+        }
+
+        /* 页脚 */
+        footer {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #71717a;
+            font-size: 0.9rem;
+        }
+
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            .grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <!-- 加载动画 -->
+    <div class="loader">
+        <div class="loader-circle"></div>
+    </div>
+
+    <!-- 滚动进度条 -->
+    <div class="progress-bar"></div>
+
+    <!-- 粒子背景画布 -->
+    <canvas id="particles"></canvas>
+
+    <!-- 鼠标跟随光晕 -->
+    <div class="cursor-glow"></div>
+
+    <!-- 头部区域 -->
+    <header>
+        <h1 class="hero-title">太阳-YC13的炫酷作品库</h1>
+        <p class="hero-sub">集合所有前端练习页面 · 2026 学习项目合集</p>
+        <div class="clock" id="clock"></div>
+    </header>
+
+    <!-- 主体内容：全部文件超链接卡片 -->
+    <main class="container">
+        <h2 class="section-title">全部项目文件入口</h2>
+        <div class="grid">
+            <!-- 1. 星空学习网页 second.html -->
+            <div class="card">
+                <h3>🌌 星空学习网页</h3>
+                <p>星空背景页面，包含CSS背景图、圆角、阴影、响应式布局练习</p>
+                <a href="second.html" class="btn">立即访问</a>
+            </div>
+
+            <!-- 2. 仓库主页链接 -->
+            <div class="card">
+                <h3>📂 GitHub 仓库</h3>
+                <p>查看全部源码、目录、历史文件与代码详情</p>
+                <a href="https://github.com/sun-yc13/my-first-page-2026" class="btn">进入仓库</a>
+            </div>
+
+            <!-- 3. 可继续补充你截图里的所有HTML文件，格式统一 -->
+            <div class="card">
+                <h3>📄 练习页面 1</h3>
+                <p>基础HTML结构、标签、文本排版练习页面</p>
+                <a href="demo1.html" class="btn">打开页面</a>
+            </div>
+
+            <div class="card">
+                <h3>📄 练习页面 2</h3>
+                <p>CSS基础样式、颜色、边距、布局练习</p>
+                <a href="demo2.html" class="btn">打开页面</a>
+            </div>
+
+            <div class="card">
+                <h3>📄 表单练习页</h3>
+                <p>HTML表单、输入框、按钮、交互元素练习</p>
+                <a href="form.html" class="btn">打开页面</a>
+            </div>
+
+            <div class="card">
+                <h3>📄 列表导航页</h3>
+                <p>有序列表、无序列表、导航菜单制作练习</p>
+                <a href="nav.html" class="btn">打开页面</a>
+            </div>
+        </div>
+    </main>
+
+    <!-- 页脚 -->
+    <footer>
+        © 2026 太阳-YC13 | 前端学习作品集 · 苹果风格动态网页
+    </footer>
+
+    <!-- 背景音乐按钮 -->
+    <div class="music-btn" id="musicBtn">♪</div>
+    <audio id="bgMusic" loop preload="auto">
+        <source src="https://www.soundjay.com/misc/soft-piano-1.mp3" type="audio/mpeg">
+    
+
+    <script>
+        // 1. 页面加载动画
+        window.addEventListener('load', () => {
+            document.querySelector('.loader').classList.add('hidden');
+        });
+
+        // 2. 滚动进度条
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.querySelector('.progress-bar').style.width = scrolled + '%';
+        });
+
+        // 3. 鼠标跟随光晕效果
+        const glow = document.querySelector('.cursor-glow');
+        window.addEventListener('mousemove', e => {
+            glow.style.left = e.clientX + 'px';
+            glow.style.top = e.clientY + 'px';
+        });
+
+        // 4. 实时时钟
+        function setClock() {
+            const now = new Date();
+            const h = now.getHours().toString().padStart(2,'0');
+            const m = now.getMinutes().toString().padStart(2,'0');
+            const s = now.getSeconds().toString().padStart(2,'0');
+            document.getElementById('clock').innerText = `${h} : ${m} : ${s}`;
+        }
+        setClock();
+        setInterval(setClock, 1000);
+
+        // 5. 背景音乐开关
+        const musicBtn = document.getElementById('musicBtn');
+        const bgMusic = document.getElementById('bgMusic');
+        let musicPlay = false;
+        musicBtn.addEventListener('click', () => {
+            if(!musicPlay){
+                bgMusic.play();
+                musicBtn.innerText = '⏸';
+                musicPlay = true;
+            }else{
+                bgMusic.pause();
+                musicBtn.innerText = '♪';
+                musicPlay = false;
+            }
+        });
+
+        // 6. 滚动渐入动画（苹果官网风格）
+        const observeList = document.querySelectorAll('.section-title, .card');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(item => {
+                if(item.isIntersecting){
+                    item.target.classList.add('visible');
+                }
+            });
+        }, {threshold: 0.1});
+        observeList.forEach(el => observer.observe(el));
+
+        // 7. 粒子星空背景
+        const canvas = document.getElementById('particles');
+        const ctx = canvas.getContext('2d');
+        let w, h, particles = [];
+
+        function resizeCanvas() {
+            w = canvas.width = window.innerWidth;
+            h = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        // 粒子类
+        class Particle {
+            constructor() {
+                this.x = Math.random() * w;
+                this.y = Math.random() * h;
+                this.r = Math.random() * 1.5 + 0.5;
+                this.speedX = (Math.random() - 0.5) * 0.3;
+                this.speedY = (Math.random() - 0.5) * 0.3;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if(this.x < 0 || this.x > w) this.speedX *= -1;
+                if(this.y < 0 || this.y > h) this.speedY *= -1;
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(255,255,255,0.6)';
+                ctx.fill();
+            }
+        }
+
+        // 初始化粒子
+        function initParticles() {
+            particles = [];
+            for(let i = 0; i < 120; i++){
+                particles.push(new Particle());
+            }
+        }
+
+        // 粒子动画循环
+        function animateParticles() {
+            ctx.clearRect(0, 0, w, h);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animateParticles);
+        }
+
+        initParticles();
+        animateParticles();
+    </script>
+</body>
+</html>
