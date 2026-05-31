@@ -1,426 +1,152 @@
-<!-- AI生成 -->
-<!-- 网页名字：太阳-YC13的炫酷作品库 -->
+<!-- 完整版：详细简介 + 支持自定义简介展示 + 来源安全校验 -->
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>太阳-YC13的炫酷作品库</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Microsoft YaHei", sans-serif;
-        }
-
-        :root {
-            --bg: #000;
-            --glass: rgba(255,255,255,0.08);
-            --glass-border: rgba(255,255,255,0.15);
-            --accent: #6366f1;
-            --accent2: #a855f7;
-            --text: #f5f5f7;
-        }
-
-        body {
-            background: var(--bg);
-            color: var(--text);
-            overflow-x: hidden;
-            scroll-behavior: smooth;
-        }
-
-        .progress-bar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--accent), var(--accent2));
-            width: 0%;
-            z-index: 9999;
-        }
-
-        #particles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-        }
-
-        .cursor-glow {
-            position: fixed;
-            width: 600px;
-            height: 600px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(99,102,241,0.15), transparent 70%);
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        .loader {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 99999;
-            opacity: 1;
-            visibility: visible;
-            transition: opacity 0.8s ease, visibility 0.8s ease;
-        }
-        .loader.hidden {
-            opacity: 0;
-            visibility: hidden;
-        }
-        .loader-circle {
-            width: 60px;
-            height: 60px;
-            border: 3px solid rgba(255,255,255,0.1);
-            border-top-color: var(--accent);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        header {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 2rem;
-            position: relative;
-        }
-
-        .hero-title {
-            font-size: clamp(2.5rem, 8vw, 5rem);
-            font-weight: 700;
-            background: linear-gradient(90deg, #fff, #a5b4fc, #f0abfc);
-            -webkit-background-clip: text;
-            color: transparent;
-            margin-bottom: 1.5rem;
-            opacity: 0;
-            transform: translateY(30px);
-            animation: fadeUp 1s ease forwards;
-        }
-
-        .hero-sub {
-            font-size: clamp(1rem, 2.5vw, 1.4rem);
-            color: #a1a1aa;
-            max-width: 600px;
-            opacity: 0;
-            transform: translateY(30px);
-            animation: fadeUp 1s ease 0.2s forwards;
-        }
-
-        @keyframes fadeUp {
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .clock {
-            margin-top: 2rem;
-            font-size: 1.2rem;
-            color: #94a3b8;
-            letter-spacing: 2px;
-        }
-
-        .music-btn {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: var(--glass);
-            border: 1px solid var(--glass-border);
-            color: #fff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            backdrop-filter: blur(10px);
-            z-index: 100;
-            transition: transform 0.3s ease;
-            font-size: 20px;
-        }
-        .music-btn:hover { transform: scale(1.1); }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 6rem 2rem;
-        }
-
-        .section-title {
-            font-size: clamp(1.8rem, 4vw, 2.5rem);
-            margin-bottom: 3rem;
-            text-align: center;
-            opacity: 0;
-            transform: translateY(40px);
-            transition: all 0.8s ease;
-        }
-        .section-title.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-        }
-
-        .card {
-            background: var(--glass);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 2rem;
-            backdrop-filter: blur(16px);
-            opacity: 0;
-            transform: translateY(50px) scale(0.95);
-            transition: all 0.6s ease;
-            cursor: default;
-        }
-        .card.visible {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-        }
-        .card:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 20px 60px rgba(99,102,241,0.25);
-            border-color: rgba(168,85,247,0.5);
-        }
-
-        .card h3 {
-            font-size: 1.4rem;
-            margin-bottom: 1rem;
-        }
-        .card p {
-            color: #a1a1aa;
-            margin-bottom: 1.5rem;
-            line-height: 1.6;
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 12px 28px;
-            border-radius: 50px;
-            background: linear-gradient(90deg, var(--accent), var(--accent2));
-            color: white;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-        .btn:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 10px 30px rgba(99,102,241,0.3);
-        }
-
-        footer {
-            text-align: center;
-            padding: 4rem 2rem;
-            color: #71717a;
-            font-size: 0.9rem;
-        }
-
-        @media (max-width: 768px) {
-            .grid { grid-template-columns: 1fr; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>太阳-YC13的炫酷作品库</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,sans-serif}
+:root{--bg:#050508;--glass:rgba(255,255,255,.06);--bd:rgba(147,112,219,.3);--nb:#4f46e5;--np:#a855f7;--pi:#ec4899;--tx:#f5f5f7}
+body{background:var(--bg);color:var(--tx);overflow-x:hidden;scroll-behavior:smooth;background-image:radial-gradient(circle at 50% 50%,rgba(79,70,229,.08),transparent 70%)}
+.pbar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--nb),var(--np),var(--pi));width:0;z-index:9999;box-shadow:0 0 8px var(--np)}
+#part{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1}
+.glow{position:fixed;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,rgba(168,85,247,.18),transparent 70%);transform:translate(-50%,-50%);pointer-events:none;z-index:-1;filter:blur(20px)}
+.load{position:fixed;top:0;left:0;width:100%;height:100%;background:var(--bg);display:flex;justify-content:center;align-items:center;z-index:99999;opacity:1;visibility:visible;transition:.8s}
+.load.hidden{opacity:0;visibility:hidden}
+.ring{width:70px;height:70px;border:3px solid rgba(255,255,255,.1);border-top-color:var(--np);border-radius:50%;animation:spin 1s linear infinite;box-shadow:0 0 15px var(--np)}
+@keyframes spin{to{transform:rotate(360deg)}}
+header{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:2rem}
+.title{font-size:clamp(2.5rem,8vw,5rem);font-weight:700;background:linear-gradient(90deg,#fff,var(--nb),var(--np),var(--pi),#fff);background-size:300% 100%;-webkit-background-clip:text;color:transparent;margin-bottom:1.5rem;opacity:0;transform:translateY(30px);animation:fu 1s forwards,fl 6s infinite}
+.sub{font-size:clamp(1rem,2.5vw,1.4rem);color:#b4b4c8;max-width:600px;opacity:0;transform:translateY(30px);animation:fu 1s .2s forwards;text-shadow:0 0 5px rgba(168,85,247,.4)}
+@keyframes fu{to{opacity:1;transform:translateY(0)}}
+@keyframes fl{0%{background-position:0% 50%}100%{background-position:300% 50%}}
+.time{margin-top:2rem;font-size:1.3rem;color:var(--np);letter-spacing:3px;text-shadow:0 0 8px var(--np)}
+.music{position:fixed;bottom:30px;right:30px;width:55px;height:55px;border-radius:50%;background:var(--glass);border:1px solid var(--bd);color:#fff;display:flex;justify-content:center;align-items:center;cursor:pointer;backdrop-filter:blur(16px);z-index:100;transition:.3s;font-size:22px;box-shadow:0 0 10px rgba(168,85,247,.3)}
+.music:hover{transform:scale(1.15) rotate(15deg);box-shadow:0 0 20px var(--np)}
+.wrap{max-width:1200px;margin:0 auto;padding:6rem 2rem}
+.sec{font-size:clamp(1.8rem,4vw,2.5rem);margin-bottom:3rem;text-align:center;opacity:0;transform:translateY(40px);transition:.8s;color:#fff;text-shadow:0 0 10px var(--nb)}
+.sec.on{opacity:1;transform:translateY(0)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:2rem}
+.card{background:var(--glass);border:1px solid var(--bd);border-radius:20px;padding:2rem;backdrop-filter:blur(16px);opacity:0;transform:translateY(50px) scale(.95);transition:.4s cubic-bezier(.175,.885,.32,1.275)}
+.card.on{opacity:1;transform:translateY(0) scale(1)}
+.card:hover{transform:translateY(-12px) scale(1.03);border-color:var(--np);box-shadow:0 10px 40px rgba(168,85,247,.25),0 0 15px rgba(168,85,247,.2) inset}
+.card h3{font-size:1.4rem;margin-bottom:1rem;color:#fff;text-shadow:0 0 6px rgba(79,70,229,.5)}
+.card p{color:#b4b4c8;margin-bottom:1.5rem;line-height:1.6}
+.btn{display:inline-block;padding:12px 28px;border-radius:50px;background:linear-gradient(90deg,var(--nb),var(--np));color:white;text-decoration:none;font-weight:600;transition:.3s;box-shadow:0 0 8px rgba(79,70,229,.4)}
+.btn:hover{transform:translateY(-3px) scale(1.05);box-shadow:0 0 18px var(--np)}
+footer{text-align:center;padding:4rem 2rem;color:#8888a0;font-size:.9rem}
+@media(max-width:768px){.grid{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
 
-<div class="loader"><div class="loader-circle"></div></div>
-<div class="progress-bar"></div>
-<canvas id="particles"></canvas>
-<div class="cursor-glow"></div>
+<div class="load"><div class="ring"></div></div>
+<div class="pbar"></div>
+<canvas id="part"></canvas>
+<div class="glow"></div>
 
 <header>
-    <h1 class="hero-title">太阳-YC13的炫酷作品库</h1>
-    <p class="hero-sub">集合所有前端练习页面 · 2026 学习项目合集</p>
-    <div class="clock" id="clock"></div>
+    <h1 class="title">太阳-YC13的炫酷作品库</h1>
+    <p class="sub">集合所有前端练习页面 · 2026 学习项目合集</p>
+    <div class="time" id="clock"></div>
 </header>
 
-<main class="container">
-    <h2 class="section-title">全部项目文件入口</h2>
-    <div class="grid" id="cardGrid">
-        
+<div class="wrap">
+    <h2 class="sec">全部项目文件入口</h2>
+    <div class="grid" id="box">
+        <!-- 详细简介 -->
         <div class="card">
             <h3>📄 1.html</h3>
-            <p>HTML基础结构与标签练习页面</p>
-            <a href="1.html" class="btn">打开页面</a>
+            <p>基础HTML练习页面，包含常用标签、文本排版、基础布局，适合入门学习网页结构搭建。</p>
+            <a href="1.html" class="btn" target="_blank" rel="noopener">打开</a>
         </div>
-
         <div class="card">
             <h3>📄 first.html</h3>
-            <p>更新过HTML结构和样式的练习页面</p>
-            <a href="first.html" class="btn">打开页面</a>
+            <p>优化版HTML页面，新增CSS样式美化、简单交互效果，巩固样式布局相关知识点。</p>
+            <a href="first.html" class="btn" target="_blank" rel="noopener">打开</a>
         </div>
-
         <div class="card">
             <h3>🌌 星空学习网页</h3>
-            <p>星空背景页面，包含CSS背景图、圆角、阴影、响应式布局练习</p>
-            <a href="second.html" class="btn">打开页面</a>
+            <p>创意动态星空背景页面，练习背景样式、圆角、阴影、渐变以及移动端响应式布局。</p>
+            <a href="second.html" class="btn" target="_blank" rel="noopener">打开</a>
         </div>
-
         <div class="card">
             <h3>📂 GitHub 仓库</h3>
-            <p>查看全部源码、目录、历史文件与代码详情</p>
-            <a href="https://github.com/sun-yc13/my-first-page-2026" class="btn">进入仓库</a>
+            <p>项目源码托管仓库，可查看全部代码文件、版本记录、目录结构与完整开发日志。</p>
+            <a href="https://github.com/sun-yc13/my-first-page-2026" class="btn" target="_blank" rel="noopener">打开</a>
         </div>
-
         <div class="card">
             <h3>🌱 Arduino土壤湿度项目</h3>
-            <p>浇水控制完整项目文档</p>
-            <a href="Arduino土壤湿度检测（浇水控制）完整项目文档" class="btn">查看文档</a>
+            <p>硬件物联网实战项目，包含电路接线、代码逻辑、功能调试、自动浇水完整实现方案。</p>
+            <a href="Arduino土壤湿度检测（浇水控制）完整项目文档" class="btn" target="_blank" rel="noopener">查看</a>
         </div>
-
         <div class="card">
             <h3>📜 Arduino_Python语法</h3>
-            <p>Python语法学习笔记</p>
-            <a href="Arduino_Python语法.txt.txt" class="btn">查看笔记</a>
+            <p>Python基础语法学习笔记，涵盖变量、循环、判断、函数，适配硬件开发使用场景。</p>
+            <a href="Arduino_Python语法.txt.txt" class="btn" target="_blank" rel="noopener">查看</a>
         </div>
-
         <div class="card">
             <h3>🎮 game.py</h3>
-            <p>Python小游戏项目源码</p>
-            <a href="game.py" class="btn">查看代码</a>
+            <p>Python趣味小游戏源码，结合基础语法实现简单游戏逻辑，提升代码编写实操能力。</p>
+            <a href="game.py" class="btn" target="_blank" rel="noopener">查看</a>
         </div>
-
-        <!-- 绝密隐藏入口：无任何提示 -->
-        <div class="card" id="secretAdmin">
+        <div class="card" id="go">
             <h3>🚀 后续更新</h3>
-            <p>更多精彩内容即将上线，敬请期待</p>
-            <a class="btn">等待更新</a>
+            <p>持续更新新的学习项目、实战案例与创意页面，敬请期待更多内容。</p>
+            <span class="btn">等待更新</span>
         </div>
-
     </div>
-</main>
+</div>
 
-<footer>
-    © 2026 太阳-YC13 | 前端学习作品集
-</footer>
-
-<div class="music-btn" id="musicBtn">♪</div>
-<audio id="bgMusic" loop preload="auto">
-    <source src="https://www.soundjay.com/misc/soft-piano-1.mp3" type="audio/mpeg">
-
+<footer>© 2026 太阳-YC13</footer>
+<div class="music" id="music">♪</div>
+<audio id="bgm" loop><source src="https://www.soundjay.com/misc/soft-piano.mp3">
 
 <script>
-// 修复：页面加载后隐藏加载动画
-window.addEventListener('load', () => {
-    document.querySelector('.loader').classList.add('hidden');
-});
+window.addEventListener('load',()=>{document.querySelector('.load').classList.add('hidden')});
+window.addEventListener('scroll',()=>{const s=document.documentElement.scrollTop;const h=document.documentElement.scrollHeight-innerHeight;document.querySelector('.pbar').style.width=(s/h)*100+'%';});
+const g=document.querySelector('.glow');window.addEventListener('mousemove',e=>{g.style.left=e.x+'px';g.style.top=e.y+'px';});
+function c(){const d=new Date();document.getElementById('clock').innerText=`${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}:${String(d.getSeconds()).padStart(2,'0')}`;}
+c();setInterval(c,1000);
+const mb=document.getElementById('music');const bgm=document.getElementById('bgm');let p=false;mb.onclick=()=>{p?bgm.pause():bgm.play();mb.innerText=p?'♪':'⏸';p=!p;};
+const io=new IntersectionObserver(e=>{e.forEach(i=>i.isIntersecting&&i.target.classList.add('on'));},{threshold:.1});
+document.querySelectorAll('.sec,.card').forEach(i=>io.observe(i));
 
-// 滚动条
-window.addEventListener('scroll', () => {
-    const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-    const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-    document.querySelector('.progress-bar').style.width = (winScroll / height) * 100 + '%';
-});
-
-// 鼠标光效
-const glow = document.querySelector('.cursor-glow');
-window.addEventListener('mousemove', e => {
-    glow.style.left = e.clientX + 'px';
-    glow.style.top = e.clientY + 'px';
-});
-
-// 时钟
-function setClock() {
-    const now = new Date();
-    const h = now.getHours().toString().padStart(2,'0');
-    const m = now.getMinutes().toString().padStart(2,'0');
-    const s = now.getSeconds().toString().padStart(2,'0');
-    document.getElementById('clock').innerText = `${h}:${m}:${s}`;
-}
-setClock(); setInterval(setClock, 1000);
-
-// 音乐
-const musicBtn = document.getElementById('musicBtn');
-const bgMusic = document.getElementById('bgMusic');
-let playing = false;
-musicBtn.onclick = () => {
-    playing ? bgMusic.pause() : bgMusic.play();
-    musicBtn.innerText = playing ? '♪' : '⏸';
-    playing = !playing;
+// 三连击跳转 + 写入安全标识
+let cnt=0;
+document.getElementById('go').onclick=()=>{
+  cnt++;
+  if(cnt===3){
+    cnt=0;
+    sessionStorage.setItem("FROM_MAIN","ALLOW");
+    location.href='admin.html';
+  }
 };
 
-// 滚动动画
-const obs = new IntersectionObserver(e=>{e.forEach(i=>i.isIntersecting&&i.target.classList.add('visible'))},{threshold:0.1});
-document.querySelectorAll('.section-title,.card').forEach(i=>obs.observe(i));
-
-// ============================
-// 加密隐藏版 绝密后台管理
-// 查看源码也找不到密码！
-// ============================
-const pwd = Array(5,1,4,2,6,3).sort().join('');
-let clickCount = 0;
-document.getElementById('secretAdmin').onclick = () => {
-    clickCount++;
-    if(clickCount===3){
-        clickCount=0;
-        let input = prompt("请输入管理员密码：");
-        if(input === pwd){
-            let mode = prompt("管理模式：\n1 = 添加\n2 = 删除\n3 = 修改");
-            let list = JSON.parse(localStorage.getItem('customCards')||'[]');
-            
-            if(mode==='1'){
-                let n = prompt("名称：");
-                let l = prompt("网址：");
-                if(n&&l){list.push({name:n,link:l});localStorage.setItem('customCards',JSON.stringify(list));location.reload();}
-            }
-            
-            if(mode==='2'){
-                let show = list.map((i,j)=>`${j+1}. ${i.name}`).join('\n');
-                let idx = prompt(`删除项：\n${show}`);
-                if(idx){list.splice(idx-1,1);localStorage.setItem('customCards',JSON.stringify(list));location.reload();}
-            }
-            
-            if(mode==='3'){
-                let show = list.map((i,j)=>`${j+1}. ${i.name}`).join('\n');
-                let idx = prompt(`修改项：\n${show}`)-1;
-                if(list[idx]){
-                    let n = prompt("新名称：",list[idx].name);
-                    let l = prompt("新网址：",list[idx].link);
-                    list[idx]={name:n,link:l};
-                    localStorage.setItem('customCards',JSON.stringify(list));
-                    location.reload();
-                }
-            }
-        }
-    }
-};
-
-// 加载自定义卡片
-window.addEventListener('load', () => {
-    let data = JSON.parse(localStorage.getItem('customCards')||'[]');
-    let grid = document.getElementById('cardGrid');
+// 加载本地自定义卡片（渲染名称+简介+链接）
+window.onload = function(){
+    const data = JSON.parse(localStorage.getItem("customCards") || "[]");
+    const box = document.getElementById("box");
     data.forEach(item => {
-        let c = document.createElement('div');
-        c.className = 'card';
-        c.innerHTML = `<h3>🔗 ${item.name}</h3><p>自定义页面</p><a href="${item.link}" class="btn">打开</a>`;
-        grid.appendChild(c);
-        obs.observe(c);
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+            <h3>🔗 ${item.name}</h3>
+            <p>${item.desc}</p>
+            <a href="${item.link}" class="btn" target="_blank" rel="noopener">打开</a>
+        `;
+        box.appendChild(card);
+        io.observe(card);
     });
-});
+};
 
-// 粒子背景
-const canvas = document.getElementById('particles');
-const ctx = canvas.getContext('2d');
-let w,h,ps=[];
-function rs(){w=canvas.width=window.innerWidth;h=canvas.height=window.innerHeight;}
+// 粒子效果
+const cv=document.getElementById('part');const ctx=cv.getContext('2d');let w,h,ps=[];
+function rs(){w=cv.width=innerWidth;h=cv.height=innerHeight;}
 window.addEventListener('resize',rs);rs();
-class P{constructor(){this.x=Math.random()*w;this.y=Math.random()*h;this.r=Math.random()*1.5+0.5;this.sx=(Math.random()-0.5)*0.3;this.sy=(Math.random()-0.5)*0.3;}u(){this.x+=this.sx;this.y+=this.sy;this.x<0||this.x>w&&(this.sx*=-1);this.y<0||this.y>h&&(this.sy*=-1);}d(){ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.fillStyle='rgba(255,255,255,0.6)';ctx.fill();}}
-function ip(){ps=[];for(let i=0;i<120;i++)ps.push(new P());}
+class P{constructor(){this.x=Math.random()*w;this.y=Math.random()*h;this.r=Math.random()*2+.5;this.sx=(Math.random()-.5)*.4;this.sy=(Math.random()-.5)*.4;this.a=Math.random()*.6+.2;}u(){this.x+=this.sx;this.y+=this.sy;(this.x<0||this.x>w)&&(this.sx*=-1);(this.y<0||this.y>h)&&(this.sy*=-1);}d(){ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.fillStyle=`rgba(180,140,255,${this.a})`;ctx.fill();}}
+function ip(){ps=[];for(let i=0;i<180;i++)ps.push(new P());}
 function ap(){ctx.clearRect(0,0,w,h);ps.forEach(p=>{p.u();p.d();});requestAnimationFrame(ap);}
 ip();ap();
 </script>
