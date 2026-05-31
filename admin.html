@@ -1,4 +1,4 @@
-<!-- 终极安全：必须从主页跳转，否则禁止访问 -->
+<!-- 管理员后台：新增简介录入 + 来源访问限制 -->
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -8,79 +8,101 @@
 <style>
 body{margin:0;background:#0a0a12;color:#fff;font-family:system-ui,sans-serif;padding:40px 20px}
 .box{max-width:500px;margin:0 auto;background:#151525;padding:30px;border-radius:16px}
-input{width:100%;padding:12px;margin:10px 0;border-radius:8px;border:none;background:#202035;color:#fff}
-button{padding:12px 20px;background:#704df7;border:none;border-radius:8px;color:#fff;cursor:pointer;margin-top:10px}
-.hide{display:none}
+input,textarea{width:100%;padding:12px;margin:10px 0;border-radius:8px;border:none;background:#202035;color:#fff;font-size:14px}
+textarea{resize:vertical;min-height:80px}
+button{padding:12px 20px;background:#704df7;border:none;border-radius:8px;color:#fff;cursor:pointer;margin:8px 5px 0 0}
 </style>
 </head>
 <body>
 
 <script>
-// ========== 核心安全防护：必须从主页跳转 ==========
+// 安全校验：非主页跳转直接拦截
 if (sessionStorage.getItem("FROM_MAIN") !== "ALLOW") {
-  // 不是从主页来的 → 直接踢回主页
   location.href = "index.html";
 }
-// 一次性验证，用完即删
 sessionStorage.removeItem("FROM_MAIN");
 </script>
 
 <div id="panel" class="box">
-  <h2>管理员面板</h2>
-  <button onclick="add()">添加卡片</button>
-  <button onclick="del()">删除卡片</button>
-  <button onclick="edit()">修改卡片</button>
-  <button onclick="out()">返回主页</button>
+  <h2>管理员操作面板</h2>
+  <hr style="margin:15px 0;border-color:#333">
+  <button onclick="addCard()">新增卡片</button>
+  <button onclick="delCard()">删除卡片</button>
+  <button onclick="editCard()">修改卡片</button>
+  <button onclick="backHome()">返回主页</button>
 </div>
 
 <script>
-// 添加
-function add(){
-  const name = prompt("输入名称");
-  const link = prompt("输入网址");
+// 新增卡片：名称 + 网址 + 简介
+function addCard(){
+  const name = prompt("请输入卡片名称：");
+  if(!name) return alert("名称不能为空！");
+
+  const link = prompt("请输入跳转网址（必须 http/https 开头）：");
   if (!link || !/^https?:\/\//.test(link)) {
-    alert("无效网址！必须以 http/https 开头");
-    return;
+    return alert("网址格式错误，请重新输入！");
   }
+
+  const desc = prompt("请输入详细简介：");
+  if(!desc) return alert("简介不能为空！");
+
   const data = JSON.parse(localStorage.getItem("customCards") || "[]");
-  data.push({ name, link });
+  data.push({ name, link, desc });
   localStorage.setItem("customCards", JSON.stringify(data));
+  alert("添加成功！");
   location.href = "index.html";
 }
 
-// 删除
-function del(){
+// 删除卡片
+function delCard(){
   const data = JSON.parse(localStorage.getItem("customCards") || "[]");
-  if (data.length === 0) { alert("无数据"); return; }
-  const list = data.map((i,j) => `${j+1}. ${i.name}`).join("\n");
-  const idx = prompt("输入序号：\n" + list);
-  if (idx) {
-    data.splice(idx - 1, 1);
-    localStorage.setItem("customCards", JSON.stringify(data));
-    location.href = "index.html";
-  }
-}
+  if (data.length === 0) return alert("暂无自定义卡片！");
 
-// 修改
-function edit(){
-  const data = JSON.parse(localStorage.getItem("customCards") || "[]");
-  if (data.length === 0) { alert("无数据"); return; }
-  const list = data.map((i,j) => `${j+1}. ${i.name}`).join("\n");
-  const idx = prompt("输入序号：\n" + list) - 1;
-  if (!data[idx]) return;
-  const name = prompt("新名称", data[idx].name);
-  const link = prompt("新网址", data[idx].link);
-  if (!link || !/^https?:\/\//.test(link)) {
-    alert("无效网址！");
-    return;
-  }
-  data[idx] = { name, link };
+  let listText = "当前卡片列表：\n";
+  data.forEach((item,idx)=>{
+    listText += `${idx+1}. ${item.name}\n`;
+  });
+  const idx = prompt(listText + "\n请输入要删除的序号：");
+  if(!idx) return;
+
+  data.splice(idx - 1, 1);
   localStorage.setItem("customCards", JSON.stringify(data));
+  alert("删除成功！");
   location.href = "index.html";
 }
 
-// 退出
-function out(){
+// 修改卡片：同步修改 名称/网址/简介
+function editCard(){
+  const data = JSON.parse(localStorage.getItem("customCards") || "[]");
+  if (data.length === 0) return alert("暂无自定义卡片！");
+
+  let listText = "当前卡片列表：\n";
+  data.forEach((item,idx)=>{
+    listText += `${idx+1}. ${item.name}\n`;
+  });
+  const num = prompt(listText + "\n请输入要修改的序号：") - 1;
+  if(!data[num]) return alert("序号不存在！");
+
+  const old = data[num];
+  const newName = prompt("修改名称：", old.name);
+  if(!newName) return alert("名称不能为空！");
+
+  const newLink = prompt("修改网址：", old.link);
+  if (!newLink || !/^https?:\/\//.test(newLink)) {
+    return alert("网址格式错误！");
+  }
+
+  const newDesc = prompt("修改简介：", old.desc);
+  if(!newDesc) return alert("简介不能为空！");
+
+  data[num] = { name: newName, link: newLink, desc: newDesc };
+  localStorage.setItem("customCards", JSON.stringify(data));
+  alert("修改成功！");
+  location.href = "index.html";
+}
+
+// 返回主页
+function backHome(){
   location.href = "index.html";
 }
 </script>
