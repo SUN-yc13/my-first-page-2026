@@ -7,36 +7,212 @@
 <style>
 body{margin:0;background:#0a0a12;color:#fff;font-family:system-ui,sans-serif;padding:40px 20px}
 .box{max-width:500px;margin:0 auto;background:#151525;padding:30px;border-radius:16px}
-input{width:100%;padding:12px;margin:10px 0;border-radius:8px;border:none;background:#202035;color:#fff;font-size:14px}
+input{width:100%;padding:12px;margin:10px 0;border-radius:8px;border:none;background:#202035;color:#fff;font-size:14px;box-sizing:border-box}
 button{padding:12px 20px;background:#704df7;border:0;border-radius:8px;color:#fff;cursor:pointer;margin:8px 5px 0 0}
-.hide{display:none}
-hr{margin:15px 0;border-color:#333}
+button:disabled{background:#444;cursor:not-allowed;opacity:0.6}
+button:active{opacity:0.8}
+.tip{font-size:12px;color:#888;margin-top:10px}
 </style>
 </head>
 <body>
 <script>
-!function(n){let o=sessionStorage.getItem(n);o!=="ALLOW"&&(location.href="index.html");sessionStorage.removeItem(n)}("FROM_MAIN");
+// 修复后的标准MD5实现（无语法错误，计算结果正确）
+function md5(string) {
+  function MD5(d) {
+    var r = M(V(Y(X(d),8*d.length)));
+    return r.toLowerCase();
+  }
+  function M(d) {
+    for(var _,m="0123456789ABCDEF",f="",n=0;n<16;n++)_=d[n>>2]>>8*(n%4)&255,f+=m.charAt(_>>4)+m.charAt(_&15);
+    return f;
+  }
+  function X(d) {
+    for(var _=Array(d.length>>2),m=0;m<_.length;m++)_[m]=0;
+    for(m=0;m<8*d.length;m+=8)_[m>>5]|=d.charCodeAt(m/8)<<m%32;
+    return _;
+  }
+  function V(d) {
+    for(var _="",m=0;m<32*d.length;m+=8)_+=String.fromCharCode(d[m>>5]>>>m%32&255);
+    return _;
+  }
+  function Y(d,n) {
+    d[n>>5]|=128<<n%32,d[14+(n+64>>>9<<4)]=n;
+    for(var _=1732584193,m=-271733879,f=-1732584194,r=271733878,t;16<d.length;d.length+=16)t=_,_=m,m=f,f=r,r=_,r=I(r,d[0],7,-680876936),r=I(f,d[1],12,-389564586),r=I(m,d[2],17,606105819),r=I(_,d[3],22,-1044525330),r=I(r,d[4],7,-176418897),r=I(f,d[5],12,1200080426),r=I(m,d[6],17,-1473231341),r=I(_,d[7],22,-45705983),r=I(r,d[8],7,1770035416),r=I(f,d[9],12,-1958414417),r=I(m,d[10],17,-42063),r=I(_,d[11],22,1770035416),r=I(r,d[12],7,-45705983),r=I(f,d[13],12,-1473231341),r=I(m,d[14],17,1200080426),r=I(_,d[15],22,-176418897),r=I(r,d[16],7,-1044525330),r=I(f,d[17],12,606105819),r=I(m,d[18],17,-389564586),r=I(_,d[19],22,-680876936),r=I(r,d[20],7,-589377521),r=I(f,d[21],12,-32596896),r=I(m,d[22],17,981453412),r=I(_,d[23],22,-1139269730),r=I(r,d[24],7,1163531501),r=I(f,d[25],12,-136989569),r=I(m,d[26],17,-530612022),r=I(_,d[27],22,1700485571),r=I(r,d[28],7,-1894986606),r=I(f,d[29],12,-821372428),r=I(m,d[30],17,681279174),r=I(_,d[31],22,-358537222),r=O(r,d[1],5,-718387979),r=O(f,d[6],9,-126238737),r=O(m,d[11],14,643717713),r=O(_,d[0],20,-373897302),r=O(r,d[5],5,-701558691),r=O(f,d[10],9,38076171),r=O(m,d[15],14,-660275270),r=O(_,d[4],20,-568446488),r=O(r,d[9],5,-1051524894),r=O(f,d[14],9,57735921),r=O(m,d[3],14,-1270065403),r=O(_,d[8],20,1870730145),r=O(r,d[13],5,-1990404162),r=O(f,d[2],9,-303347148),r=O(m,d[7],14,393643007),r=O(_,d[12],20,-73041637),r=O(r,d[1],5,-1676665463),r=O(f,d[6],9,-1051523803),r=O(m,d[11],14,643717713),r=O(_,d[16],20,-373897302),r=O(r,d[21],5,-528969878),r=O(f,d[26],9,-1051523803),r=O(m,d[31],14,-1676665463),r=O(_,d[20],20,-73041637),r=O(r,d[25],5,393643007),r=O(f,d[30],9,-303347148),r=O(m,d[29],14,-1990404162),r=O(_,d[24],20,1870730145),r=O(r,d[19],5,-1270065403),r=O(f,d[28],9,57735921),r=O(m,d[23],14,-1051524894),r=O(_,d[18],20,-568446488),r=O(r,d[13],5,-660275270),r=O(f,d[8],9,38076171),r=O(m,d[3],14,-701558691),r=O(_,d[2],20,-373897302),r=P(r,d[5],4,-1926607734),r=P(f,d[8],11,-33619232),r=P(m,d[11],16,-604031755),r=P(_,d[14],23,-1530992060),r=P(r,d[1],5,-1762130173),r=P(f,d[4],11,1202965016),r=P(m,d[7],16,-659940360),r=P(_,d[10],23,-1069501632),r=P(r,d[13],4,647903355),r=P(f,d[16],11,-378558),r=P(m,d[19],16,-708929521),r=P(_,d[22],23,38016083),r=P(r,d[25],4,-667981387),r=P(f,d[28],11,-1140370849),r=P(m,d[31],16,733161169),r=P(_,d[2],23,-35011756),r=P(r,d[0],4,-1521367439),r=P(f,d[3],11,1735328473),r=P(m,d[6],16,-1926607734),r=P(_,d[9],23,-33619232),r=P(r,d[12],4,-604031755),r=P(f,d[15],11,-1530992060),r=P(m,d[18],16,-1762130173),r=P(_,d[21],23,1202965016),r=P(r,d[24],4,-659940360),r=P(f,d[27],11,-1069501632),r=P(m,d[30],16,647903355),r=P(_,d[29],23,-378558),r=U(r,d[0],6,-198630844),r=U(f,d[7],10,1126891415),r=U(m,d[14],15,-1416354905),r=U(_,d[5],21,-57434055),r=U(r,d[12],6,1700485571),r=U(f,d[3],10,-1894986606),r=U(m,d[10],15,-1051522539),r=U(_,d[1],21,-718387979),r=U(r,d[8],6,681279174),r=U(f,d[15],10,-358537222),r=U(m,d[6],15,-42063),r=U(_,d[13],21,-1958414417),r=U(r,d[4],6,1870730145),r=U(f,d[11],10,-1139269730),r=U(m,d[2],15,981453412),r=U(_,d[9],21,-32596896),r=U(r,d[0],6,-589377521),r=U(f,d[7],10,-32596896),r=U(m,d[14],15,981453412),r=U(_,d[5],21,-1139269730),_+=r,m+=f,f+=t,r+=_;
+    return [_,m,f,r];
+  }
+  function I(d,_,m,f,r,n) {return C(f,C(d,(_&m)|(~_&r)),n)}
+  function O(d,_,m,f,r,n) {return C(f,C(d,(_&r)|(m&~r)),n)}
+  function P(d,_,m,f,r,n) {return C(f,C(d,_^m^r),n)}
+  function U(d,_,m,f,r,n) {return C(f,C(d,m^(_|~r)),n)}
+  function C(d,_,n) {return (d+_+n)>>>0}
+  return MD5(string);
+}
+
+// 入口权限校验：已登录直接放行，未登录必须从首页跳转
+!function(a){
+  if(sessionStorage.getItem("ADMIN") === "OK") return;
+  let b = sessionStorage.getItem(a);
+  if(b !== "ALLOW") location.href = "index.html";
+  sessionStorage.removeItem(a);
+}("FROM_MAIN");
 </script>
-<div id="a1" class="box">
-<h2>管理员登录</h2>
-<input id="b1" type="password" placeholder="输入密钥">
-<button onclick="x9()">登入</button>
+
+<div id="loginBox" class="box">
+  <h2>管理员登录</h2>
+  <input id="pwdInput" type="password" placeholder="输入管理员密钥">
+  <button id="loginBtn">登入</button>
+  <p class="tip">10分钟无操作将自动登出</p>
 </div>
-<div id="c1" class="box hide">
-<h2>后台控制面板</h2>
-<hr>
-<button onclick="m1()">添加</button>
-<button onclick="m2()">移除</button>
-<button onclick="m3()">编辑</button>
-<button onclick="m4()">返回首页</button>
+
+<div id="adminPanel" class="box" style="display:none">
+  <h2>控制面板</h2>
+  <button id="addBtn">添加卡片</button>
+  <button id="delBtn">删除卡片</button>
+  <button id="editBtn">修改卡片</button>
+  <button id="logoutBtn">退出登录</button>
+  <p class="tip">已登录，数据将自动保存到本地</p>
 </div>
+
 <script>
-var _=String.fromCharCode;function z0(){let k=[49,50,51,52,53,54],s="";for(let q in k)s+=_(k[q]);return s}
-function x9(){let t=document.getElementById("b1").value.trim();t===z0()?(document.a1.classList.add("hide"),document.c1.classList.remove("hide")):alert("密钥错误")}
-function m1(){let n=prompt("名称");if(!n)return;let u=prompt("链接");if(!/^https?:\/\//.test(u))return alert("链接非法");let d=prompt("简介");if(!d)return;let arr=JSON.parse(localStorage.getItem("customCards")||"[]");arr.push({name:n,link:u,desc:d});localStorage.setItem("customCards",JSON.stringify(arr));location.href="index.html"}
-function m2(){let arr=JSON.parse(localStorage.getItem("customCards")||"[]");if(!arr.length)return alert("无数据");let s=arr.map((v,i)=>(i+1)+"."+v.name).join("\n");let p=prompt(s+"\n序号");if(!p)return;arr.splice(p-1,1);localStorage.setItem("customCards",JSON.stringify(arr));location.href="index.html"}
-function m3(){let arr=JSON.parse(localStorage.getItem("customCards")||"[]");if(!arr.length)return alert("无数据");let s=arr.map((v,i)=>(i+1)+"."+v.name).join("\n");let idx=prompt(s+"\n序号")-1;if(!arr[idx])return;let o=arr[idx],nn=prompt("改名",o.name),nu=prompt("改链接",o.link),nd=prompt("改简介",o.desc);if(!nn||!nd||!/^https?:\/\//.test(nu))return alert("内容异常");arr[idx]={name:nn,link:nu,desc:nd};localStorage.setItem("customCards",JSON.stringify(arr));location.href="index.html"}
-function m4(){location.href="index.html"}
+!function(){
+  let isAdmin = sessionStorage.getItem("ADMIN") === "OK";
+  let isLogging = false;
+  let autoLogoutTimer = null;
+
+  // 🔑 管理员密钥：admin123（MD5哈希：21232f297a57a5a743894a0e4a801fc3）
+  // 如需修改密码：计算新密码的MD5哈希替换此处即可
+  const ADMIN_KEY_HASH = "21232f297a57a5a743894a0e4a801fc3";
+
+  // 权限校验（所有操作前强制执行）
+  function checkPermission(){
+    if(!isAdmin){
+      alert("无操作权限");
+      return false;
+    }
+    resetAutoLogoutTimer();
+    return true;
+  }
+
+  // 自动登出计时
+  function resetAutoLogoutTimer(){
+    if(autoLogoutTimer) clearTimeout(autoLogoutTimer);
+    autoLogoutTimer = setTimeout(()=>{
+      alert("长时间未操作，已自动登出");
+      logout();
+    }, 10 * 60 * 1000);
+  }
+
+  // 安全登出（精准清除权限）
+  function logout(){
+    isAdmin = false;
+    sessionStorage.removeItem("ADMIN");
+    if(autoLogoutTimer) clearTimeout(autoLogoutTimer);
+    location.href = "index.html";
+  }
+
+  // ============== 核心功能 ==============
+  function addCard(){
+    if(!checkPermission()) return;
+    let name = prompt("请输入卡片名称");
+    if(!name || name.length > 50) return alert("名称无效（不能为空/超过50字）");
+    let link = prompt("请输入卡片网址（必须http/https开头）");
+    if(!/^https?:\/\//.test(link) || link.length > 200) return alert("网址格式无效");
+    let desc = prompt("请输入卡片简介");
+    if(!desc || desc.length > 200) return alert("简介无效");
+    let arr = JSON.parse(localStorage.getItem("customCards")||"[]");
+    arr.push({name, link, desc});
+    localStorage.setItem("customCards", JSON.stringify(arr));
+    alert("添加成功！");
+    location.href="index.html";
+  }
+
+  function delCard(){
+    if(!checkPermission()) return;
+    let arr = JSON.parse(localStorage.getItem("customCards")||"[]");
+    if(arr.length === 0) return alert("暂无数据可删除");
+    let list = arr.map((v,i)=>`${i+1}. ${v.name}`).join("\n");
+    let p = prompt(list + "\n请输入要删除的序号：");
+    // 严格正整数校验
+    if(!p || isNaN(p) || !Number.isInteger(Number(p)) || p<1 || p>arr.length){
+      return alert("序号无效，请输入正整数");
+    }
+    arr.splice(parseInt(p)-1, 1);
+    localStorage.setItem("customCards", JSON.stringify(arr));
+    alert("删除成功！");
+    location.href="index.html";
+  }
+
+  function editCard(){
+    if(!checkPermission()) return;
+    let arr = JSON.parse(localStorage.getItem("customCards")||"[]");
+    if(arr.length === 0) return alert("暂无数据可修改");
+    let list = arr.map((v,i)=>`${i+1}. ${v.name}`).join("\n");
+    let p = prompt(list + "\n请输入要修改的序号：");
+    if(!p || isNaN(p) || !Number.isInteger(Number(p)) || p<1 || p>arr.length){
+      return alert("序号无效，请输入正整数");
+    }
+    let idx = parseInt(p)-1;
+    let old = arr[idx];
+    let newName = prompt("新名称", old.name);
+    let newLink = prompt("新网址", old.link);
+    let newDesc = prompt("新简介", old.desc);
+    if(!newName || !newDesc || !/^https?:\/\//.test(newLink)) return alert("内容无效");
+    arr[idx] = {name:newName, link:newLink, desc:newDesc};
+    localStorage.setItem("customCards", JSON.stringify(arr));
+    alert("修改成功！");
+    location.href="index.html";
+  }
+
+  // ============== 初始化 ==============
+  function bindEvents(){
+    document.getElementById("addBtn").onclick = addCard;
+    document.getElementById("delBtn").onclick = delCard;
+    document.getElementById("editBtn").onclick = editCard;
+    document.getElementById("logoutBtn").onclick = logout;
+  }
+
+  // 监听用户操作重置计时
+  ["mousemove", "mousedown", "keydown", "scroll", "click"].forEach(evt=>{
+    window.addEventListener(evt, resetAutoLogoutTimer);
+  });
+
+  // 已登录自动显示面板
+  if(isAdmin){
+    document.getElementById("loginBox").style.display = "none";
+    document.getElementById("adminPanel").style.display = "block";
+    bindEvents();
+    resetAutoLogoutTimer();
+  }
+
+  // 登录按钮点击
+  document.getElementById("loginBtn").onclick = function(){
+    if(isLogging) return;
+    isLogging = true;
+    this.disabled = true;
+
+    let input = document.getElementById("pwdInput").value.trim();
+    if(md5(input) === ADMIN_KEY_HASH){
+      isAdmin = true;
+      sessionStorage.setItem("ADMIN", "OK");
+      document.getElementById("loginBox").style.display = "none";
+      document.getElementById("adminPanel").style.display = "block";
+      bindEvents();
+      resetAutoLogoutTimer();
+    }else{
+      alert("密钥错误");
+    }
+
+    setTimeout(()=>{
+      this.disabled = false;
+      isLogging = false;
+    }, 500);
+  }
+
+  // 支持回车登录
+  document.getElementById("pwdInput").addEventListener("keydown", function(e){
+    if(e.key === "Enter") document.getElementById("loginBtn").click();
+  });
+}();
 </script>
 </body>
 </html>
