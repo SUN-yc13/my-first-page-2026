@@ -2,85 +2,41 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Admin</title>
 <style>
 body{margin:0;background:#0a0a12;color:#fff;font-family:system-ui,sans-serif;padding:40px 20px}
 .box{max-width:500px;margin:0 auto;background:#151525;padding:30px;border-radius:16px}
-input,textarea{width:100%;padding:12px;margin:10px 0;border-radius:8px;border:none;background:#202035;color:#fff;font-size:14px}
-textarea{resize:vertical;min-height:80px}
-button{padding:12px 20px;background:#704df7;border:none;border-radius:8px;color:#fff;cursor:pointer;margin:8px 5px 0 0}
-.hide{display:none;}
-hr{margin:15px 0;border-color:#333;}
+input{width:100%;padding:12px;margin:10px 0;border-radius:8px;border:none;background:#202035;color:#fff;font-size:14px}
+button{padding:12px 20px;background:#704df7;border:0;border-radius:8px;color:#fff;cursor:pointer;margin:8px 5px 0 0}
+.hide{display:none}
+hr{margin:15px 0;border-color:#333}
 </style>
 </head>
 <body>
-
 <script>
-// 1. 必须从主页三连击过来，否则直接踢走
-if (sessionStorage.getItem("FROM_MAIN") !== "ALLOW") {
-  location.href = "index.html";
-}
-sessionStorage.removeItem("FROM_MAIN");
+!function(n){let o=sessionStorage.getItem(n);o!=="ALLOW"&&(location.href="index.html");sessionStorage.removeItem(n)}("FROM_MAIN");
 </script>
-
-<!-- 2. 登录区：一定显示出来 -->
-<div id="loginBox" class="box">
-  <h2>管理员登录</h2>
-  <input id="pwdInput" type="password" placeholder="请输入管理员密码">
-  <button onclick="checkPwd()">登录</button>
+<div id="a1" class="box">
+<h2>管理员登录</h2>
+<input id="b1" type="password" placeholder="输入密钥">
+<button onclick="x9()">登入</button>
 </div>
-
-<!-- 3. 操作面板：默认隐藏 -->
-<div id="operateBox" class="box hide">
-  <h2>管理员操作面板</h2>
-  <hr>
-  <button onclick="addCard()">新增卡片</button>
-  <button onclick="delCard()">删除卡片</button>
-  <button onclick="editCard()">修改卡片</button>
-  <button onclick="backHome()">返回主页</button>
+<div id="c1" class="box hide">
+<h2>后台控制面板</h2>
+<hr>
+<button onclick="m1()">添加</button>
+<button onclick="m2()">移除</button>
+<button onclick="m3()">编辑</button>
+<button onclick="m4()">返回首页</button>
 </div>
-
 <script>
-// 👇 固定密码：这里写死，保证你一定能登录
-const FIXED_PASSWORD = "123456";
-
-function checkPwd(){
-  const inputPwd = document.getElementById("pwdInput").value.trim();
-  if(inputPwd === FIXED_PASSWORD){
-    // 密码对了，显示操作面板
-    document.getElementById("loginBox").classList.add("hide");
-    document.getElementById("operateBox").classList.remove("hide");
-  }else{
-    alert("密码错误，请重新输入！");
-  }
-}
-
-// 新增卡片：名称+网址+简介
-function addCard(){
-  const name = prompt("请输入卡片名称：");
-  if(!name) return alert("名称不能为空！");
-
-  const link = prompt("请输入跳转网址（必须 http/https 开头）：");
-  if (!link || !/^https?:\/\//.test(link)) {
-    return alert("网址格式错误，请重新输入！");
-  }
-
-  const desc = prompt("请输入详细简介：");
-  if(!desc) return alert("简介不能为空！");
-
-  const data = JSON.parse(localStorage.getItem("customCards") || "[]");
-  data.push({ name, link, desc });
-  localStorage.setItem("customCards", JSON.stringify(data));
-  alert("添加成功！");
-  location.href = "index.html";
-}
-
-// 删除卡片
-function delCard(){
-  const data = JSON.parse(localStorage.getItem("customCards") || "[]");
-  if (data.length === 0) return alert("暂无自定义卡片！");
-
-  let listText = "当前卡片列表：\n";
-  data.forEach((item,idx)=>{
-    listText +=
+var _=String.fromCharCode;function z0(){let k=[49,50,51,52,53,54],s="";for(let q in k)s+=_(k[q]);return s}
+function x9(){let t=document.getElementById("b1").value.trim();t===z0()?(document.a1.classList.add("hide"),document.c1.classList.remove("hide")):alert("密钥错误")}
+function m1(){let n=prompt("名称");if(!n)return;let u=prompt("链接");if(!/^https?:\/\//.test(u))return alert("链接非法");let d=prompt("简介");if(!d)return;let arr=JSON.parse(localStorage.getItem("customCards")||"[]");arr.push({name:n,link:u,desc:d});localStorage.setItem("customCards",JSON.stringify(arr));location.href="index.html"}
+function m2(){let arr=JSON.parse(localStorage.getItem("customCards")||"[]");if(!arr.length)return alert("无数据");let s=arr.map((v,i)=>(i+1)+"."+v.name).join("\n");let p=prompt(s+"\n序号");if(!p)return;arr.splice(p-1,1);localStorage.setItem("customCards",JSON.stringify(arr));location.href="index.html"}
+function m3(){let arr=JSON.parse(localStorage.getItem("customCards")||"[]");if(!arr.length)return alert("无数据");let s=arr.map((v,i)=>(i+1)+"."+v.name).join("\n");let idx=prompt(s+"\n序号")-1;if(!arr[idx])return;let o=arr[idx],nn=prompt("改名",o.name),nu=prompt("改链接",o.link),nd=prompt("改简介",o.desc);if(!nn||!nd||!/^https?:\/\//.test(nu))return alert("内容异常");arr[idx]={name:nn,link:nu,desc:nd};localStorage.setItem("customCards",JSON.stringify(arr));location.href="index.html"}
+function m4(){location.href="index.html"}
+</script>
+</body>
+</html>
